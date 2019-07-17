@@ -1,10 +1,8 @@
 import numpy as np
 import pandas as pd
-#import matplotlib.pyplot as plt
-import seaborn as sns 
-
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatch
+import seaborn as sns 
 
 
 table_2 = pd.read_csv('2_column.csv')
@@ -21,19 +19,15 @@ class Klobczak:
         split_axis = self.find_split_axis(table)
         element_count = table.A.count()
 
-        if element_count<self.cube_size*(1.3):
-            #######################
-            self.tables.append(table)
-            #######################
+        median = np.median(table[split_axis])
+        split_table1 = table[table[split_axis] >= median]
+        split_table2 = table[table[split_axis] < median]
 
-        if(element_count> self.cube_size*1.2):
-            median = np.median(table[split_axis])
-            split_table1 = table[table[split_axis] > median]
-            split_table2 = table[table[split_axis] <= median]
+        if(element_count> self.cube_size):
             self.split(split_table1)
             self.split(split_table2)
         else:
-            pass
+            self.tables.append(table)
 
 
     def find_split_axis(self, table):
