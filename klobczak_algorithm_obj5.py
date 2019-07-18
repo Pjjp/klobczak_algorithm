@@ -18,10 +18,15 @@ class Klobczak:
 
     def main(self, cube_size = 10000, table = []):
         tables = []
-        split(table)
+        for tab in self.split(table, cube_size):
+            tables.append(tab)
+            print('0000000000000000000000')
+
+        for i in tables:
+            print(i.count()) 
         
 
-    def split(self, table):
+    def split(self, table, cube_size):
         split_axis = self.find_split_axis(table)
         element_count = table[split_axis].count()
 
@@ -38,11 +43,11 @@ class Klobczak:
             split_table2 = split_table2.append( 
                 table_median.tail( int(half_of_all - split_table2[split_axis].count())) )
 
-        if(element_count> self.cube_size):
-            self.split(split_table1)
-            self.split(split_table2)
+        if(element_count> cube_size):
+            self.split(split_table1, cube_size)
+            self.split(split_table2, cube_size)
         else:
-            self.tables.append(table)
+            yield table
 
 
     def find_split_axis(self, table):
@@ -68,3 +73,7 @@ class Klobczak:
         ax.set_xlim((x_min, x_max))
         ax.set_ylim((y_min, y_max))
         plt.show()
+
+
+k = Klobczak()
+k.main(table = table_2)
