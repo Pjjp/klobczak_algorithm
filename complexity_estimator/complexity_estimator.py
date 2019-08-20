@@ -1,28 +1,40 @@
-import math
-numb_of_elements = 10000
+from django.core.exceptions import ValidationError
+from catalogue.models import CatalogueItem
 
-def estimate(VOLUME, chunks):
+COUNT = 1000
+
+CHUNKS = CatalogueItem.create_chunks(COUNT)
+RANGE = 100
+
+# FIXME: what if min, max are strings?
+
+def complexityEstimator(CHUNKS, RANGE):
+
+    if all(CHUNKS[i]['column'] <= CHUNKS[i+1]['column'] for i in range(len(CHUNKS-1))):
+        left_min = CHUNKS[0].borders['minimum']
+        right_max = CHUNKS[-1].borders['maximum']
+
+        sample_chunks = []
+        while(RANGE):
+            for ch in CHUNKS:
+                sample_chunks.append({
+                    # 'minimum': randrange(ch.borders['minimum'], ch.borders['maximum']-1)
+                    # 'maximum': randrange(sample_chunk['minimum'], ch.borders['maximum'])
+                })
+
+    else:
+        raise ValidationError(
+            'chunks have to be sorted'
+        )
+
+def percent_of_whole(CHUNKS, sample_chunks):
     
-    s_chunks = sorted(chunks, key = lambda k: k["column"])
-    numb_of_d = len(s_chunks[0])
+    chunks_area = 1
+    for ch in CHUNKS:
+        chunks_area = chunks_area*(ch.borders['maximum'] - ch.borders['minimum'])
     
-    math.floor(numb_of_elements/numb_of_d)
+    sample_chunks_area = 1
+    for s_ch in sample_chunks:
+        sample_chunks_area = sample_chunks_area*chunks_area*(s_ch.borders['maximum'] - s_ch.borders['minimum'])
 
-    for col in s_chunks:
-        
-    shape = {}
-
-def how_many_chunks(min, max, col, chunks):
-
-    col_chunks = []
-    for chunk in chunks:
-        if chunk["column"] = col:
-            col_chunks.append(chunk)
-
-    number_of_chunks = 0
-    for chunk in col_chunks:
-        if chunk["minimum"]>min and chunk["maximum"]<max:
-            number_of_chunks += 1
-
-    # col_chunks_min = min([min for min in chunk["minimum"]])
-    # col_chunks_max = max([max for max in chunk["maximum"]])
+    return (sample_chunks_area/chunks_area)*100
